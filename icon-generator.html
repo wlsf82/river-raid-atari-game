@@ -1,69 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Icon Generator</title>
+  <title>Icon Generator</title>
 </head>
 <body>
-    <canvas id="canvas192" width="192" height="192" style="border: 1px solid black;"></canvas>
-    <br>
-    <canvas id="canvas512" width="512" height="512" style="border: 1px solid black;"></canvas>
-    <br>
-    <button onclick="downloadIcons()">Download Icons</button>
+  <canvas id="canvas192" width="192" height="192" style="border: 1px solid black;"></canvas>
+  <br>
+  <canvas id="canvas512" width="512" height="512" style="border: 1px solid black;"></canvas>
+  <br>
+  <button onclick="downloadIcons()">Download Icons</button>
 
-    <script>
-        function drawIcon(canvas, size) {
-            const ctx = canvas.getContext('2d');
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
 
-            // Blue background
-            ctx.fillStyle = '#1e3a8a';
-            ctx.fillRect(0, 0, size, size);
+      // Blue background
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fillRect(0, 0, size, size);
 
-            // Scale factor
-            const scale = size / 192;
+      // Scale factor
+      const scale = size / 192;
 
-            // Jet body (green)
-            ctx.fillStyle = '#00ff00';
-            ctx.fillRect(76 * scale, 48 * scale, 40 * scale, 96 * scale);
+      // Jet body (green)
+      ctx.fillStyle = '#00ff00';
+      ctx.fillRect(76 * scale, 48 * scale, 40 * scale, 96 * scale);
 
-            // Jet nose (white triangle)
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.moveTo(96 * scale, 32 * scale);
-            ctx.lineTo(84 * scale, 48 * scale);
-            ctx.lineTo(108 * scale, 48 * scale);
-            ctx.fill();
+      // Jet nose (white triangle)
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.moveTo(96 * scale, 32 * scale);
+      ctx.lineTo(84 * scale, 48 * scale);
+      ctx.lineTo(108 * scale, 48 * scale);
+      ctx.fill();
 
-            // Wings (gray)
-            ctx.fillStyle = '#888888';
-            ctx.fillRect(56 * scale, 80 * scale, 80 * scale, 16 * scale);
+      // Wings (gray)
+      ctx.fillStyle = '#888888';
+      ctx.fillRect(56 * scale, 80 * scale, 80 * scale, 16 * scale);
 
-            // Title
-            ctx.fillStyle = 'white';
-            ctx.font = `${14 * scale}px monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText('River Raid', 96 * scale, 170 * scale);
-        }
+      // Title
+      ctx.fillStyle = 'white';
+      ctx.font = `${14 * scale}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('River Raid', 96 * scale, 170 * scale);
+    }
 
-        function downloadIcons() {
-            const canvas192 = document.getElementById('canvas192');
-            const canvas512 = document.getElementById('canvas512');
+    function downloadIcons() {
+      const canvas192 = document.getElementById('canvas192');
+      const canvas512 = document.getElementById('canvas512');
 
-            // Download 192x192
-            const link192 = document.createElement('a');
-            link192.download = 'icon-192.png';
-            link192.href = canvas192.toDataURL();
-            link192.click();
+      // Download 192x192
+      const link192 = document.createElement('a');
+      link192.download = 'icon-192.png';
+      link192.href = canvas192.toDataURL();
+      link192.click();
 
-            // Download 512x512
-            const link512 = document.createElement('a');
-            link512.download = 'icon-512.png';
-            link512.href = canvas512.toDataURL();
-            link512.click();
-        }
+      // Download 512x512
+      const link512 = document.createElement('a');
+      link512.download = 'icon-512.png';
+      link512.href = canvas512.toDataURL();
+      link512.click();
+    }
 
-        // Draw icons
-        drawIcon(document.getElementById('canvas192'), 192);
-        drawIcon(document.getElementById('canvas512'), 512);
-    </script>
+    // Draw icons
+    drawIcon(document.getElementById('canvas192'), 192);
+    drawIcon(document.getElementById('canvas512'), 512);
+  </script>
 </body>
 </html>
