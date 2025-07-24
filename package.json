@@ -1,0 +1,36 @@
+{
+  "name": "river-raid-atari-game",
+  "version": "1.0.0",
+  "description": "A Progressive Web App recreation of the classic Atari River Raid game",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "build": "echo 'No build step required for this PWA'",
+    "test": "echo 'No tests specified'",
+    "generate-icons": "open icon-generator.html"
+  },
+  "keywords": [
+    "game",
+    "atari",
+    "river-raid",
+    "javascript",
+    "html5",
+    "canvas",
+    "pwa",
+    "progressive-web-app",
+    "offline"
+  ],
+  "author": "Developer",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "pwa": {
+    "name": "River Raid - Atari Inspired",
+    "short_name": "River Raid",
+    "theme_color": "#1e3a8a",
+    "background_color": "#000000",
+    "display": "standalone",
+    "orientation": "landscape-primary"
+  }
+}

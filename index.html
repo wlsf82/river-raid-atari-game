@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>River Raid - Atari Inspired</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="A web-based recreation of the classic Atari River Raid game">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="River Raid">
+  <meta name="msapplication-TileColor" content="#1e3a8a">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- PWA Icons -->
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #gameContainer {
+      position: relative;
+      border: 2px solid #fff;
+    }
+    #gameCanvas {
+      background: #1e3a8a;
+      display: block;
+    }
+    #gameUI {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 16px;
+      z-index: 10;
+    }
+    #instructions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fff;
+      font-size: 12px;
+      z-index: 10;
+      text-align: right;
+    }
+    #gameOver {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      text-align: center;
+      font-size: 24px;
+      z-index: 20;
+      display: none;
+    }
+    #installPrompt {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 10px;
+      border: 1px solid #fff;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 30;
+      display: none;
+      cursor: pointer;
+    }
+    #installPrompt:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    #offlineStatus {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 0, 0, 0.8);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      z-index: 30;
+      display: none;
+    }
+    #offlineStatus.online {
+      background: rgba(0, 255, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="gameUI">
+      <div>Score: <span id="score">0</span></div>
+      <div>High Score: <span id="highScore">0</span></div>
+      <div>Fuel: <span id="fuel">100</span>%</div>
+      <div>Lives: <span id="lives">3</span></div>
+      <div>Distance: <span id="distance">0</span>km</div>
+    </div>
+    <div id="instructions">
+      <div>Arrow Keys: Move</div>
+      <div>Spacebar: Shoot</div>
+      <div>Fly over fuel depots to refuel!</div>
+      <div>River width changes as you progress!</div>
+    </div>
+    <div id="gameOver">
+      <div id="gameOverText">GAME OVER</div>
+      <div>Final Score: <span id="finalScore">0</span></div>
+      <div>High Score: <span id="finalHighScore">0</span></div>
+      <div>Press R to Restart</div>
+    </div>
+    <div id="installPrompt">
+      📱 Install River Raid
+    </div>
+    <div id="offlineStatus">
+      🔴 OFFLINE
+    </div>
+  </div>
+
+  <!-- PWA Installation Script -->
+  <script>
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+
+    // PWA Installation Prompt
+    let deferredPrompt;
+    const installPrompt = document.getElementById('installPrompt');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installPrompt.style.display = 'block';
+    });
+
+    installPrompt.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+          installPrompt.style.display = 'none';
+        });
+      }
+    });
+
+    // Hide install prompt if already installed
+    window.addEventListener('appinstalled', () => {
+      installPrompt.style.display = 'none';
+      console.log('PWA was installed');
+    });
+
+    // Online/Offline Status
+    const offlineStatus = document.getElementById('offlineStatus');
+
+    function updateOnlineStatus() {
+      if (navigator.onLine) {
+        offlineStatus.textContent = '🟢 ONLINE';
+        offlineStatus.className = 'online';
+        offlineStatus.style.display = 'none';
+      } else {
+        offlineStatus.textContent = '🔴 OFFLINE';
+        offlineStatus.className = '';
+        offlineStatus.style.display = 'block';
+      }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus(); // Check initial status
+  </script>
+
+  <script src="game.js"></script>
+</body>
+</html>

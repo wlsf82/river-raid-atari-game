@@ -1,0 +1,16 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue background -->
+  <rect width="192" height="192" fill="#1e3a8a"/>
+
+  <!-- Jet body (green) -->
+  <rect x="76" y="48" width="40" height="96" fill="#00ff00"/>
+
+  <!-- Jet nose (white) -->
+  <polygon points="96,32 84,48 108,48" fill="white"/>
+
+  <!-- Wings (gray) -->
+  <rect x="56" y="80" width="80" height="16" fill="#888888"/>
+
+  <!-- Game title -->
+  <text x="96" y="170" text-anchor="middle" font-family="monospace" font-size="14" fill="white">River Raid</text>
+</svg>
